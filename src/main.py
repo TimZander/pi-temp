@@ -14,11 +14,11 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv,"hi:b:c:",["interval=","base_dir=","connection_string="])
     except getopt.GetoptError:
-        print 'main.py -i <interval> -c <connection_string> -b <base_dir>'
+        print('main.py -i <interval> -c <connection_string> -b <base_dir>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print 'main.py -i <interval> -c <connection_string> -b <base_dir>'
+            print('main.py -i <interval> -c <connection_string> -b <base_dir>')
             sys.exit()
         elif opt in ("-i", "--interval"):
             sleep_time = arg
