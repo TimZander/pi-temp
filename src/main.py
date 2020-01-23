@@ -21,7 +21,7 @@ def main(argv):
             print('main.py -i <interval> -c <connection_string> -b <base_dir>')
             sys.exit()
         elif opt in ("-i", "--interval"):
-            sleep_time = arg
+            sleep_time = float(arg)
         elif opt in ("-b", "--base_dir"):
             base_dir = arg
         elif opt in ("-c", "--connection_string"):
