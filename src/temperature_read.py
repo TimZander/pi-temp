@@ -12,7 +12,7 @@ def read_temp(device):
     lines = read_temp_raw(device.path)
     while lines[0].strip()[-3:] != 'YES':
         time.sleep(0.2)
-        lines = read_temp_raw()
+        lines = read_temp_raw(device.path)
     equals_pos = lines[1].find('t=')
     if equals_pos != -1:
         temp_string = lines[1][equals_pos+2:]
