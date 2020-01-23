@@ -5,7 +5,7 @@ class Device:
         self.path = path
         self.serial = serial
 
-def get_devices(folder, slave_path, matching_string):
+def get_devices(base_dir, slave_path, matching_string):
     device_folder = glob.glob(base_dir + matching_string)
     devices = []
     for folder in device_folder:
