@@ -10,9 +10,9 @@ sleep_time = 1
 if len(sys.argv) > 1:
     sleep_time = float(sys.argv[1])
 
-print("Starting pi-temp with interval of " + sleep_time)
+print("Starting pi-temp with interval of " + str(sleep_time))
 initial_devices = get_devices(base_dir, slave_path, matching_string)
-print("Reading from " + len(initial_devices) + " devices:")
+print("Reading from " + str(len(initial_devices)) + " devices:")
 for device in initial_devices:
     print(device)
 
