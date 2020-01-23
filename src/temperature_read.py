@@ -42,6 +42,11 @@ def get_device_serial(device):
     return device.replace(base_dir, '').replace(slave_path, '')
 
 
+def get_device_serial_test():
+    serial = 'test'
+    assert get_device_serial(base_dir + serial + slave_path) == serial
+
+
 while True:
     for device in get_devices():
         print(read_temp(device))
