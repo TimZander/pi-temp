@@ -3,6 +3,7 @@ from temperature_read import read_temp
 import sys
 import time
 import getopt
+from data_storage import save_to_sql
 
 def main(argv):
     base_dir = '/sys/bus/w1/devices/'
@@ -33,8 +34,10 @@ def main(argv):
         print(device)
     while True:
         for device in get_devices(base_dir, slave_path, matching_string):
-            print(read_temp(device))
+            temperature_reading = read_temp(device)
+            print(temperature_reading)
             # upload to database
+            save_to_sql(connection_string, temperature_reading)
         time.sleep(sleep_time)
 
 
