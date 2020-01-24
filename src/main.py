@@ -35,7 +35,7 @@ def main(argv):
     while True:
         for device in get_devices(base_dir, slave_path, matching_string):
             temperature_reading = read_temp(device)
-            print(temperature_reading.values)
+            print(temperature_reading.serial, temperature_reading.temperature_celcius)
             # upload to database
             save_to_sql(connection_string, temperature_reading)
         time.sleep(sleep_time)
