@@ -62,7 +62,7 @@ def main(argv):
             save_to_sql(server, user, password, database, temperature_reading)
         
         true_sleep = sleep_time - (datetime.now() - start_time).total_seconds()
-        if true_sleep > 0:
+        if true_sleep < 0:
             true_sleep = 0
 
         time.sleep(true_sleep)
