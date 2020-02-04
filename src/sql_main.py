@@ -5,25 +5,33 @@ import sys
 import time
 from datetime import datetime
 import getopt
-from data_storage import save_to_sql
+from data_storage import save_to_sql_pymssql
 
 def main(argv):
-    connection_string = ""
+    server = ""
+    user = ""
+    password = ""
+    database = ""
 
     try:
-        opts, args = getopt.getopt(argv,"hc:",["connection_string="])
+        opts, args = getopt.getopt(argv,"hs:u:p:d:",["server="])
     except getopt.GetoptError:
-        print('sql_main.py -c <connection_string>')
+        print('sql_main.py -c <server>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print('sql_main.py -c <connection_string>')
+            print('sql_main.py -c <server>')
             sys.exit()
-        elif opt in ("-c", "--connection_string"):
-            connection_string = arg
+        elif opt in ("-s", "--server"):
+            server = arg
+        elif opt in ("-u", "--user"):
+            user = arg
+        elif opt in ("-p", "--password"):
+            password = arg
+        elif opt in ("-d", "--database"):
+            database = arg
     while True:
-        save_to_sql(connection_string, TemperatureReading("TEST_SERIAL", 123, datetime.now()))
-
+        save_to_sql_pymssql(server, user, password, database, TemperatureReading("TEST_SERIAL", 123, datetime.now()))
 
 
 if __name__ == "__main__":
