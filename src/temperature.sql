@@ -1,1 +1,1 @@
-CREATE TABLE readings (id int, probe_serial varchar(255), reading_date datetime, temperature_value float)
+CREATE TABLE readings (id int IDENTITY(1,1) PRIMARY KEY, probe_serial varchar(255), reading_date datetime, temperature_value float)
