@@ -4,6 +4,7 @@ import sys
 import time
 import getopt
 from data_storage import save_to_sql
+from datetime import datetime
 
 def main(argv):
     base_dir = '/sys/bus/w1/devices/'
@@ -46,6 +47,7 @@ def main(argv):
     for device in initial_devices:
         print(device.serial)
     while True:
+        start_time = datetime.now()
         current_devices = get_devices(base_dir, slave_path, matching_string)
         # if current_devices != initial_devices:
         #     print("devices changed, new devices:")
@@ -58,7 +60,12 @@ def main(argv):
                 print(temperature_reading.serial, temperature_reading.temperature_celcius)
             # upload to database
             save_to_sql(server, user, password, database, temperature_reading)
-        time.sleep(sleep_time)
+        
+        true_sleep = sleep_time - (datetime.now() - start_time).total_seconds()
+        if true_sleep > 0:
+            true_sleep = 0
+
+        time.sleep(true_sleep)
 
 
 if __name__ == "__main__":
