@@ -14,9 +14,10 @@ def main(argv):
     user = ""
     password = ""
     database = ""
+    debug = false
 
     try:
-        opts, args = getopt.getopt(argv,"hi:b:s:u:p:d:",["interval=","base_dir=","server="])
+        opts, args = getopt.getopt(argv,"hi:b:s:u:p:d:D",["interval=","base_dir=","server="])
     except getopt.GetoptError:
         print('main.py -i <interval> -s <server> -b <base_dir>')
         sys.exit(2)
@@ -36,6 +37,9 @@ def main(argv):
             password = arg
         elif opt in ("-d", "--database"):
             database = arg
+        elif opt in ("-D", "--debug"):
+            debug = True
+
     print("Starting pi-temp with interval of " + str(sleep_time) + " seconds")
     initial_devices = get_devices(base_dir, slave_path, matching_string)
     print("Reading from " + str(len(initial_devices)) + " devices:")
@@ -44,7 +48,8 @@ def main(argv):
     while True:
         for device in get_devices(base_dir, slave_path, matching_string):
             temperature_reading = read_temp(device)
-            print(temperature_reading.serial, temperature_reading.temperature_celcius)
+            if debug == True:
+                print(temperature_reading.serial, temperature_reading.temperature_celcius)
             # upload to database
             save_to_sql_pymssql(server, user, password, database, temperature_reading)
         time.sleep(sleep_time)
