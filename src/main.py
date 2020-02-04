@@ -3,7 +3,7 @@ from temperature_read import read_temp
 import sys
 import time
 import getopt
-from data_storage import save_to_sql_pymssql
+from data_storage import save_to_sql
 
 def main(argv):
     base_dir = '/sys/bus/w1/devices/'
@@ -47,16 +47,17 @@ def main(argv):
         print(device.serial)
     while True:
         current_devices = get_devices(base_dir, slave_path, matching_string)
-        if current_devices != initial_devices:
-            print("devices changed, new devices:")
-            for device in current_devices:
-                print(device.serial)
+        # if current_devices != initial_devices:
+        #     print("devices changed, new devices:")
+        #     for device in current_devices:
+        #         print(device.serial)
+
         for device in current_devices:
             temperature_reading = read_temp(device)
             if debug == True:
                 print(temperature_reading.serial, temperature_reading.temperature_celcius)
             # upload to database
-            save_to_sql_pymssql(server, user, password, database, temperature_reading)
+            save_to_sql(server, user, password, database, temperature_reading)
         time.sleep(sleep_time)
 
 
