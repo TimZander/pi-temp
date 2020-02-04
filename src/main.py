@@ -14,7 +14,7 @@ def main(argv):
     user = ""
     password = ""
     database = ""
-    debug = false
+    debug = False
 
     try:
         opts, args = getopt.getopt(argv,"hi:b:s:u:p:d:D",["interval=","base_dir=","server="])
