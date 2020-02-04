@@ -46,7 +46,12 @@ def main(argv):
     for device in initial_devices:
         print(device.serial)
     while True:
-        for device in get_devices(base_dir, slave_path, matching_string):
+        current_devices = get_devices(base_dir, slave_path, matching_string)
+        if current_devices != initial_devices:
+            print("devices changed, new devices:")
+            for device in current_devices:
+                print(device.serial)
+        for device in current_devices:
             temperature_reading = read_temp(device)
             if debug == True:
                 print(temperature_reading.serial, temperature_reading.temperature_celcius)
