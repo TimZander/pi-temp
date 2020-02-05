@@ -56,12 +56,15 @@ def main(argv):
         #         print(device.serial)
 
         for device in current_devices:
-            temperature_reading = read_temp(device)
-            if debug == True:
-                print(temperature_reading.serial, temperature_reading.temperature_celcius)
-            # upload to database
-            save_to_sql(server, user, password, database, temperature_reading)
-        
+            try:
+                temperature_reading = read_temp(device)
+                if debug == True:
+                    print(temperature_reading.serial, temperature_reading.temperature_celcius)
+                # upload to database
+                save_to_sql(server, user, password, database, temperature_reading)
+            except:
+                pass
+            
         true_sleep = sleep_time - (datetime.now() - start_time).total_seconds()
         if true_sleep < 0:
             true_sleep = 0
