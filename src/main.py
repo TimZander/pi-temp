@@ -5,16 +5,17 @@ import time
 import getopt
 from data_storage import save_to_sql
 from datetime import datetime
+import os
 
 def main(argv):
     base_dir = '/sys/bus/w1/devices/'
     slave_path = '/w1_slave'
     matching_string = '28*'
     sleep_time = 1
-    server = ""
-    user = ""
-    password = ""
-    database = ""
+    server = os.getenv('PITEMP_SQLSERVER')
+    user = os.getenv('PITEMP_SQLUSER')
+    password = os.getenv('PITEMP_SQLPASSWORD')
+    database = os.getenv('PITEMP_SQLDB')
     debug = False
 
     try:
