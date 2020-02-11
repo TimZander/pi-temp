@@ -6,7 +6,19 @@ import getopt
 from data_storage import save_to_sql
 from datetime import datetime
 import os
-import syslog
+import logging
+import logging.handlers
+
+log = logging.getLogger('pitemp')
+
+log.setLevel(logging.DEBUG)
+
+handler = logging.handlers.SysLogHandler(address = '/dev/log')
+
+formatter = logging.Formatter('%(module)s.%(funcName)s: %(message)s')
+handler.setFormatter(formatter)
+
+log.addHandler(handler)
 
 def main(argv):
     base_dir = '/sys/bus/w1/devices/'
@@ -17,10 +29,9 @@ def main(argv):
     user = os.getenv('PITEMP_SQLUSER')
     password = os.getenv('PITEMP_SQLPASSWORD')
     database = os.getenv('PITEMP_SQLDB')
-    debug = False
 
     try:
-        opts, args = getopt.getopt(argv,"hi:b:s:u:p:d:D",["interval=","base_dir=","server="])
+        opts, args = getopt.getopt(argv,"hi:b:s:u:p:d:",["interval=","base_dir=","server="])
     except getopt.GetoptError:
         print('main.py -i <interval> -s <server> -b <base_dir>')
         sys.exit(2)
@@ -40,32 +51,30 @@ def main(argv):
             password = arg
         elif opt in ("-d", "--database"):
             database = arg
-        elif opt in ("-D", "--debug"):
-            debug = True
 
-    syslog.syslog("Starting pi-temp with interval of " + str(sleep_time) + " seconds")
+    log.info("Starting pi-temp with interval of " + str(sleep_time) + " seconds")
     initial_devices = get_devices(base_dir, slave_path, matching_string)
-    syslog.syslog("Reading from " + str(len(initial_devices)) + " devices:")
+    log.info("Reading from " + str(len(initial_devices)) + " devices:")
     for device in initial_devices:
-        syslog.syslog(device.serial)
+        log.info(device.serial)
     while True:
         start_time = datetime.now()
         current_devices = get_devices(base_dir, slave_path, matching_string)
         if current_devices != initial_devices:
             initial_devices = current_devices
-            syslog.syslog("devices changed, new devices:")
+            log.info("devices changed, new devices:")
             for device in current_devices:
-                syslog.syslog(device.serial)
+                log.info(device.serial)
             
 
         for device in current_devices:
             try:
                 temperature_reading = read_temp(device)
-                syslog.syslog('{0}: {1}'.format(temperature_reading.serial, temperature_reading.temperature_celcius))
+                log.debug('{0}: {1}'.format(temperature_reading.serial, temperature_reading.temperature_celcius))
                 # upload to database
                 save_to_sql(server, user, password, database, temperature_reading)
             except:
-                pass
+                log.exception("Exception reading temp or writing to DB")
             
         true_sleep = sleep_time - (datetime.now() - start_time).total_seconds()
         if true_sleep < 0:
@@ -78,4 +87,4 @@ if __name__ == "__main__":
     try:
         main(sys.argv[1:])
     except KeyboardInterrupt:
-        syslog.syslog("Shutting Down on Keyboard Interrupt")
+        log.error("Shutting Down on Keyboard Interrupt")
