@@ -1,7 +1,4 @@
-export PITEMP_SQLSERVER=
-export PITEMP_SQLUSER=
-export PITEMP_SQLPASSWORD=
-export PITEMP_SQLDB=
+. ./secrets
 
 python3 -m pip install --upgrade pip
 pip install -r requirements.txt
