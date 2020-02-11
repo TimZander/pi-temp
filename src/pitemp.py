@@ -52,15 +52,16 @@ def main(argv):
         start_time = datetime.now()
         current_devices = get_devices(base_dir, slave_path, matching_string)
         if current_devices != initial_devices:
+            initial_devices = current_devices
             syslog.syslog("devices changed, new devices:")
             for device in current_devices:
                 syslog.syslog(device.serial)
+            
 
         for device in current_devices:
             try:
                 temperature_reading = read_temp(device)
-                if debug == True:
-                    syslog.syslog(temperature_reading.serial, temperature_reading.temperature_celcius)
+                syslog.syslog('{0}: {1}'.format(temperature_reading.serial, temperature_reading.temperature_celcius))
                 # upload to database
                 save_to_sql(server, user, password, database, temperature_reading)
             except:
