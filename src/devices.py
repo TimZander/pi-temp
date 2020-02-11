@@ -4,6 +4,12 @@ class Device:
     def __init__(self, path, serial):
         self.path = path
         self.serial = serial
+    
+    def __eq__(self, other):
+        return self.path == other.path and self.serial == other.serial
+
+    def __ne__(self, other):
+        return self.path != other.path or self.serial != other.serial
 
 def get_devices(base_dir, slave_path, matching_string):
     device_folder = glob.glob(base_dir + matching_string)

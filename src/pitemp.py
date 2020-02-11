@@ -51,10 +51,10 @@ def main(argv):
     while True:
         start_time = datetime.now()
         current_devices = get_devices(base_dir, slave_path, matching_string)
-        # if current_devices != initial_devices:
-        #     print("devices changed, new devices:")
-        #     for device in current_devices:
-        #         print(device.serial)
+        if current_devices != initial_devices:
+            syslog.syslog("devices changed, new devices:")
+            for device in current_devices:
+                syslog.syslog(device.serial)
 
         for device in current_devices:
             try:
