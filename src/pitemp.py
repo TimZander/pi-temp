@@ -6,6 +6,7 @@ import getopt
 from data_storage import save_to_sql
 from datetime import datetime
 import os
+import syslog
 
 def main(argv):
     base_dir = '/sys/bus/w1/devices/'
@@ -42,11 +43,11 @@ def main(argv):
         elif opt in ("-D", "--debug"):
             debug = True
 
-    print("Starting pi-temp with interval of " + str(sleep_time) + " seconds")
+    syslog.syslog("Starting pi-temp with interval of " + str(sleep_time) + " seconds")
     initial_devices = get_devices(base_dir, slave_path, matching_string)
-    print("Reading from " + str(len(initial_devices)) + " devices:")
+    syslog.syslog("Reading from " + str(len(initial_devices)) + " devices:")
     for device in initial_devices:
-        print(device.serial)
+        syslog.syslog(device.serial)
     while True:
         start_time = datetime.now()
         current_devices = get_devices(base_dir, slave_path, matching_string)
@@ -59,7 +60,7 @@ def main(argv):
             try:
                 temperature_reading = read_temp(device)
                 if debug == True:
-                    print(temperature_reading.serial, temperature_reading.temperature_celcius)
+                    syslog.syslog(temperature_reading.serial, temperature_reading.temperature_celcius)
                 # upload to database
                 save_to_sql(server, user, password, database, temperature_reading)
             except:
