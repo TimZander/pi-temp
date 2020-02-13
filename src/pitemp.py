@@ -70,7 +70,7 @@ def main(argv):
         for device in current_devices:
             try:
                 temperature_reading = read_temp(device)
-                log.debug('{0}: {1}'.format(temperature_reading.serial, temperature_reading.temperature_celcius))
+                log.debug('{0}, {1}, {2}'.format(temperature_reading.serial, temperature_reading.temperature_celcius, temperature_reading.datetime))
                 # upload to database
                 save_to_sql(server, user, password, database, temperature_reading)
             except:
