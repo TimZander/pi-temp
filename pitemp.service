@@ -1,0 +1,13 @@
+[Unit]
+Description=Pi Temperature Logging Service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/home/tz/code/pi-temp
+User=tz
+ExecStart=/bin/bash setup.sh
+
+[Install]
+WantedBy=multi-user.target
